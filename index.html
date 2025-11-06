@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>One Piece Calculator</title>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&display=swap');
+
+    body {
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: url("https://i.imgur.com/EU3PRyV.jpeg") no-repeat center/cover;
+        font-family: 'IM Fell English SC', serif;
+        color: white;
+    }
+
+    .calc {
+        width: 350px;
+        background: rgba(0, 0, 0, 0.65);
+        padding: 22px;
+        border-radius: 20px;
+        border: 3px solid #e8b200;
+        box-shadow: 0 0 25px #e8b200;
+        backdrop-filter: blur(5px);
+    }
+
+    .title {
+        text-align: center;
+        margin-bottom: 10px;
+        color: #ffd34d;
+        font-size: 28px;
+        text-shadow: 0 0 8px black, 0 0 12px #e8b200;
+    }
+
+    .strawhat {
+        width: 70px;
+        display: block;
+        margin: 0 auto 12px;
+        filter: drop-shadow(0 0 6px #e8b200);
+    }
+
+    .display {
+        width: 100%;
+        height: 85px;
+        background: #00101f;
+        color: #ffd34d;
+        font-size: 38px;
+        text-align: right;
+        padding: 15px;
+        border-radius: 12px;
+        overflow: hidden;
+        box-sizing: border-box;
+        margin-bottom: 15px;
+        border: 2px solid #ffd34d;
+        text-shadow: 0 0 6px black;
+    }
+
+    .keys {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+    }
+
+    button {
+        padding: 20px;
+        font-size: 20px;
+        border: none;
+        border-radius: 12px;
+        background: #e63946;
+        color: #fff6d0;
+        cursor: pointer;
+        transition: 0.2s;
+        font-family: 'IM Fell English SC', serif;
+        text-shadow: 0 0 6px black;
+        border: 2px solid #ffd34d;
+    }
+
+    button.operator {
+        background: #1d3557;
+    }
+
+    button.equal {
+        background: #ffd34d;
+        color: #000;
+        grid-column: span 2;
+        font-weight: bold;
+        box-shadow: 0 0 10px #ffd34d;
+    }
+
+    button:active {
+        transform: scale(0.90);
+        filter: brightness(85%);
+    }
+</style>
+</head>
+
+<body>
+
+<div class="calc">
+
+    <img class="strawhat" src="https://i.imgur.com/7QFQ7Ai.png">
+
+    <div class="title">ONE PIECE CALCULATOR</div>
+
+    <div class="display" id="display">0</div>
+
+    <div class="keys">
+        <button onclick="clearDisplay()">AC</button>
+        <button onclick="invert()">±</button>
+        <button onclick="percent()">%</button>
+        <button class="operator" onclick="setOp('/')">÷</button>
+
+        <button onclick="addNumber('7')">7</button>
+        <button onclick="addNumber('8')">8</button>
+        <button onclick="addNumber('9')">9</button>
+        <button class="operator" onclick="setOp('*')">×</button>
+
+        <button onclick="addNumber('4')">4</button>
+        <button onclick="addNumber('5')">5</button>
+        <button onclick="addNumber('6')">6</button>
+        <button class="operator" onclick="setOp('-')">−</button>
+
+        <button onclick="addNumber('1')">1</button>
+        <button onclick="addNumber('2')">2</button>
+        <button onclick="addNumber('3')">3</button>
+        <button class="operator" onclick="setOp('+')">+</button>
+
+        <button onclick="addNumber('0')" style="grid-column: span 2;">0</button>
+        <button onclick="addNumber('.')">.</button>
+        <button class="equal" onclick="calculate()">=</button>
+    </div>
+</div>
+
+<script>
+let first = null;
+let operator = null;
+let reset = false;
+
+const display = document.getElementById("display");
+
+function addNumber(num) {
+    if (display.textContent === "0" || reset) {
+        display.textContent = (num === ".") ? "0." : num;
+        reset = false;
+    } else {
+        if (num === "." && display.textContent.includes(".")) return;
+        display.textContent += num;
+    }
+}
+
+function clearDisplay() {
+    display.textContent = "0";
+    first = null;
+    operator = null;
+}
+
+function invert() {
+    display.textContent = String(parseFloat(display.textContent) * -1);
+}
+
+function percent() {
+    display.textContent = String(parseFloat(display.textContent) / 100);
+}
+
+function setOp(op) {
+    if (first !== null && !reset) {
+        calculate();
+    }
+    first = display.textContent;
+    operator = op;
+    reset = true;
+}
+
+function calculate() {
+    if (first === null || operator === null) return;
+
+    let a = parseFloat(first);
+    let b = parseFloat(display.textContent);
+    let res = 0;
+
+    switch (operator) {
+        case "+": res = a + b; break;
+        case "-": res = a - b; break;
+        case "*": res = a * b; break;
+        case "/": res = b === 0 ? "ERRO" : a / b; break;
+    }
+
+    display.textContent = res;
+    first = null;
+    operator = null;
+    reset = true;
+}
+</script>
+
+</body>
+</html>
